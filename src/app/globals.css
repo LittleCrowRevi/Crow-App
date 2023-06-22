@@ -51,4 +51,11 @@ body {
     border: 2px solid;
     border-color: #e4cb9d;
   }
+
+  .dark-blue-gold {
+    @apply bg-[#e4cb9d];
+    color: #202020;
+    font-weight: bold;
+    font-size: 15px;
+  }
 }

@@ -1,4 +1,3 @@
-import "../layout/layout.css"
 
 export default function Navbar() {
   return (
