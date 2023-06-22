@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+
+  .dark-blue-gold {
+    @apply bg-[#e4cb9d];
+    color: #202020;
+    font-weight: bold;
+    font-size: 15px;
+  }
+}

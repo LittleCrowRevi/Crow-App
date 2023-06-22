@@ -10,18 +10,45 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --foreground-rgb: #ffffff;
+    --background-start-rgb: 42, 46, 54;
+    --background-end-rgb: 42, 46, 54;
+    --background-rgb: #131518;
   }
 }
 
+a:hover {
+  scale: 1.1;
+  transition: ease-in;
+  transition: ease-out;
+  transition-duration: 200ms;
+}
+
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: var(--foreground-rgb);
+  background: var(--background-rgb);
+}
+
+@layer components {
+  .nav_color {
+    @apply bg-[rgb(30,33,39)]
+  }
+
+  .bg_color {
+    @apply bg-[#1a1c1f]
+  }
+
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 0 auto;
+  }
+  
+  .rounded-border {
+    border-radius: 15px;
+    border: 2px solid;
+    border-color: #e4cb9d;
+  }
 }
