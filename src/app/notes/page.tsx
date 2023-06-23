@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { invoke } from '@tauri-apps/api/tauri'
+// fix window not defined???
+import { WebviewWindow, LogicalSize } from '@tauri-apps/api/window'
 
-type note = {
+type Note = {
   id: Number,
   date: Date,
   color: Number,
@@ -11,48 +13,34 @@ type note = {
   text: String
 }
 
+// var to stop constant fetching from db
 let firstLoad = true;
 
-const qNotes = async (): Promise<[note]> => {
-  const notes = await invoke('query_all_notes') as [note];
-  console.log("debug: " + notes[0].title);
-  return notes ?? [];
-};
-
-async function QueryNotesaa()  {
-
-  let notes = [];
-  const [notesState, setNotes] = useState('');
-  
-
-  const qn = await invoke('query_all_notes') as [note];
-  notes = qn;
-  console.log("debug: " + notes[0].title);
-  return notes ?? [];
-};
-
-// <a className='rounded-border py-4 px-8 hover:bg-slate-600 hover:bg-opacity-60'>+ Add Note</a>
-
 export default function Notes() {
-
-  var n: note[] = [];
-  const [loading, setLoading] = useState(false);
+  // var to init the noteState......
+  var n: Note[] = [];
   const [notesState, setNotes] = useState(n);
+
+  // TODO: loading animation
+  const [loading, setLoading] = useState(false);
+  const [editNote, setOpenNote] = useState(false)
   const [updateNotes, setUpNotes] = useState(false);
 
+  // GETS ALL notes from the rust backend
   function QueryNotes() {
 
-
-    let notes: note[] = [];
     useEffect(() => {
       setLoading(true);
       invoke('query_all_notes')
         .then(function(data) {
           setLoading(false);
-          (data as [note])?.map((n: note, index) => {
+
+          let notes: Note[] = [];
+          (data as [Note])?.map((n: Note, index) => {
             notes.push(n);
           });
           setNotes(notes);
+
           console.log("a: " + notes);
         })
         .catch(e => console.log(e));
@@ -61,17 +49,32 @@ export default function Notes() {
     return <></>
   };
 
-  function NoteDisplay() {
+  // lists all notes
+  function NoteList() {
 
     return <div className='flex z-5 w-full max-w-5xl center font-mono flex-col flex-auto lg:flex-row text-xl'>
-      {notesState?.map((n:note, index) => {
+      {notesState?.map((n:Note, index) => {
+        // TODO: more info to display
         if (n !== undefined) {
-          console.log("note: " + n)
-          return (<a key={index} className='rounded-border mt-5 py-4 px-8 lg:ml-5 hover:bg-slate-600 hover:bg-opacity-60'>{n?.title}</a>)
+          return (<a key={index} onClick={() => {OpenEditWindow(n)}} className='rounded-border mt-5 py-4 px-8 lg:ml-5 hover:bg-slate-600 hover:bg-opacity-60'>{n?.title}</a>)
         }
       })}
     </div>
   };
+
+  function OpenEditWindow(note: Note) {
+    //TODO: sizing
+    const webview = new WebviewWindow('note-editor', {
+      url: '/note-edit',
+    });
+    //webview.setMaxSize(new LogicalSize(400, 400));
+    webview.once('tauri://created', function () {
+      console.log('note editor window opened')
+    })
+    webview.once('tauri://error', function (e) {
+      console.log(e)
+    })
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
@@ -82,12 +85,12 @@ export default function Notes() {
         </>
       )}
       {loading ? (
-        <div className='loading-container z-5 w-full max-w-5xl center font-mono flex-col flex-auto lg:flex-row text-xl'>
+        <div className='loading-container flex-center-column flex-auto lg:flex-row text-xl'>
           loading
         </div>
       ): (
-        <div className="notes-row flex z-5 w-full max-w-5xl center font-mono flex-col flex-auto lg:flex-row text-xl">
-          <NoteDisplay />
+        <div className="notes-row flex-center-column flex-auto lg:flex-row text-xl">
+          <NoteList />
       </div>
       )}
     </main>

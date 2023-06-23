@@ -3,8 +3,8 @@ import Link from 'next/link'
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between">
-      <div className="z-5 w-full max-w-5xl center font-mono flex-col flex-auto lg:flex-row text-xl">
+    <main className="flex min-h-screen flex-col items-center justify-between font-mono">
+      <div className="flex-center-column items-center flex-auto lg:flex-row text-xl">
           <a href="/notes" className='rounded-border py-4 px-8 hover:bg-slate-400 hover:bg-opacity-60'>
             Your Notes
           </a>
