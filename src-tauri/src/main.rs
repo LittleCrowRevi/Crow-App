@@ -6,8 +6,9 @@ use dotenv::dotenv;
 use std::env;
 use sqlx::{Pool, Postgres};
 
+use crate::notes::note_queries::{query_all_notes, update_notes};
+
 mod notes;
-use notes::note_queries::query_all_notes;
 
 // struct for the Database Connection
 pub struct Conn(Pool<Postgres>);
@@ -25,7 +26,7 @@ async fn main() -> Result<(), sqlx::Error> {
   tauri::Builder::default()
       // passes the db connection to asking functions
       .manage::<Conn>(Conn(pool))
-      .invoke_handler(tauri::generate_handler![query_all_notes])
+      .invoke_handler(tauri::generate_handler![query_all_notes, update_notes])
       .run(tauri::generate_context!())
       .expect("error while running tauri application");
 
