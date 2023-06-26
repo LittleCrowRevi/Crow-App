@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { invoke } from '@tauri-apps/api/tauri'
 // fix window not defined???
 import { WebviewWindow, LogicalSize } from '@tauri-apps/api/window'
+import { ChangeStyle } from '../lib/lib'
 
 type Note = {
   id: Number,
@@ -56,15 +57,17 @@ export default function Notes() {
       {notesState?.map((n:Note, index) => {
         // TODO: more info to display
         if (n !== undefined) {
-          return (<a key={index} onClick={() => {OpenEditWindow(n)}} className='rounded-border mt-5 py-4 px-8 lg:ml-5 hover:bg-slate-600 hover:bg-opacity-60'>{n?.title}</a>)
+          ChangeStyle('border-color', '#' + n.color);
+          return (<a key={index} onClick={() => {OpenEditWindow(n.id)}} id='' className='rounded-border mt-5 py-4 px-8 lg:ml-5 hover:bg-slate-600 hover:bg-opacity-60'>{n?.title}</a>)
         }
       })}
     </div>
   };
 
-  function OpenEditWindow(note: Note) {
+  function OpenEditWindow(id: Number) {
+    invoke('open_edit_window', { id });
     //TODO: sizing
-    const webview = new WebviewWindow('note-editor', {
+    /*const webview = new WebviewWindow('note-editor', {
       url: '/note-edit',
     });
     //webview.setMaxSize(new LogicalSize(400, 400));
@@ -73,7 +76,7 @@ export default function Notes() {
     })
     webview.once('tauri://error', function (e) {
       console.log(e)
-    })
+    })*/
   }
 
   return (
