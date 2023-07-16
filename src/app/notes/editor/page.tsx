@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect } from "react";
 
 export default function Editor() {
@@ -6,7 +8,7 @@ export default function Editor() {
   const id = params.get("id");
 
   useEffect(() => {
-
+    
   })
 
 }

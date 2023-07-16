@@ -8,14 +8,14 @@ use crate::Conn;
 pub struct Note {
   id: i32,
   date: time::OffsetDateTime,
-  color: i32,
   title: String,
   text: String,
+  color: String,
 }
 
 impl Note {
 
-  fn new(id: i32, color: i32, title: String, text: String) -> Self {
+  fn new(id: i32, color: String, title: String, text: String) -> Self {
     
     let date = time::OffsetDateTime::now_utc();
 
@@ -64,7 +64,8 @@ pub async fn query_one_note<'a>(conn: State<'a, Conn>, id: String) -> Result<Vec
 
 
 #[tauri::command]
-pub async fn open_edit_window<'a>(app: AppHandle, conn: State<'a, Conn>, id: String) -> Result<(), ()> {
+pub async fn open_edit_window<'a>(app: AppHandle, conn: State<'a, Conn>, id: i32) -> Result<(), ()> {
+  println!("here!");
   let edit_window = tauri::WindowBuilder::new(
     &app,
     "Edit",

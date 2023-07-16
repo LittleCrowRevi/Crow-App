@@ -6,6 +6,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --notesborder: #e4cb9d;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -21,7 +22,7 @@ a:hover {
   scale: 1.1;
   transition: ease-in;
   transition: ease-out;
-  transition-duration: 200ms;
+  transition-duration: 400ms;
 }
 
 body {

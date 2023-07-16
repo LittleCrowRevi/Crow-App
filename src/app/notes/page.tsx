@@ -2,16 +2,18 @@
 
 import { useEffect, useState } from 'react'
 import { invoke } from '@tauri-apps/api/tauri'
+import styles from './notelist.module.css'
 // fix window not defined???
 import { WebviewWindow, LogicalSize } from '@tauri-apps/api/window'
-import { ChangeStyle } from '../lib/lib'
+import { Grenze } from 'next/font/google'
+import className from 'classnames'
 
 type Note = {
   id: Number,
   date: Date,
-  color: Number,
   title: String,
-  text: String
+  text: String,
+  color: String
 }
 
 // var to stop constant fetching from db
@@ -57,14 +59,21 @@ export default function Notes() {
       {notesState?.map((n:Note, index) => {
         // TODO: more info to display
         if (n !== undefined) {
-          ChangeStyle('border-color', '#' + n.color);
-          return (<a key={index} onClick={() => {OpenEditWindow(n.id)}} id='' className='rounded-border mt-5 py-4 px-8 lg:ml-5 hover:bg-slate-600 hover:bg-opacity-60'>{n?.title}</a>)
+          let classnames = className(styles.notebutton)
+          console.log(n.color);
+          return (
+            // sigh
+              <a style={{borderColor: '#' + n.color}} key={index} onClick={() => OpenEditWindow(n.id)} id='' className={classnames}>
+                {n?.title}
+              </a>
+          )
         }
       })}
     </div>
   };
 
   function OpenEditWindow(id: Number) {
+    console.log(id)
     invoke('open_edit_window', { id });
     //TODO: sizing
     /*const webview = new WebviewWindow('note-editor', {
