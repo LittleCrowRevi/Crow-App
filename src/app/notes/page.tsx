@@ -3,9 +3,6 @@
 import { useEffect, useState } from 'react'
 import { invoke } from '@tauri-apps/api/tauri'
 import styles from './notelist.module.css'
-// fix window not defined???
-import { WebviewWindow, LogicalSize } from '@tauri-apps/api/window'
-import { Grenze } from 'next/font/google'
 import className from 'classnames'
 
 type Note = {
@@ -28,7 +25,12 @@ export default function Notes() {
   const [loading, setLoading] = useState(false);
   const [editNote, setOpenNote] = useState(false)
   const [updateNotes, setUpNotes] = useState(false);
+  const [sortType, setSortType] = useState("id");
 
+  function changedLoading(state: boolean) {
+    setLoading(state);
+    return <></>
+  }
   // GETS ALL notes from the rust backend
   function QueryNotes() {
 
@@ -36,21 +38,34 @@ export default function Notes() {
       setLoading(true);
       invoke('query_all_notes')
         .then(function(data) {
-          setLoading(false);
-
           let notes: Note[] = [];
-          (data as [Note])?.map((n: Note, index) => {
-            notes.push(n);
-          });
+          (data as [Note])?.map((n: Note, index) => { notes.push(n) });
+          notes.sort(sortNotes);
+          console.log(notes);
           setNotes(notes);
-
-          console.log("a: " + notes);
         })
+        .then(() => setLoading(false))
         .catch(e => console.log(e));
       }
     );
     return <></>
   };
+
+  function sortNotes(a: Note, b: Note) {
+
+    if (sortType == "id") {
+
+      if (a.id > b.id) {
+        return 1
+      }
+      if (a.id < b.id) {
+        return -1
+      }
+      return 0
+    }
+
+    return 0;
+  }
 
   // lists all notes
   function NoteList() {
@@ -60,11 +75,13 @@ export default function Notes() {
         // TODO: more info to display
         if (n !== undefined) {
           let classnames = className(styles.notebutton)
-          console.log(n.color);
           return (
             // sigh
               <a style={{borderColor: '#' + n.color}} key={index} onClick={() => OpenEditWindow(n.id)} id='' className={classnames}>
                 {n?.title}
+                <p className="text-xs">
+                  {n?.text}
+                </p>
               </a>
           )
         }
@@ -73,27 +90,17 @@ export default function Notes() {
   };
 
   function OpenEditWindow(id: Number) {
-    console.log(id)
+    console.log("Opening note with ID " + id);
     invoke('open_edit_window', { id });
     //TODO: sizing
-    /*const webview = new WebviewWindow('note-editor', {
-      url: '/note-edit',
-    });
-    //webview.setMaxSize(new LogicalSize(400, 400));
-    webview.once('tauri://created', function () {
-      console.log('note editor window opened')
-    })
-    webview.once('tauri://error', function (e) {
-      console.log(e)
-    })*/
   }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
       {firstLoad && (
         <>
-        <QueryNotes/>
-        {firstLoad = false}
+          <QueryNotes/>
+          {firstLoad = false}
         </>
       )}
       {loading ? (

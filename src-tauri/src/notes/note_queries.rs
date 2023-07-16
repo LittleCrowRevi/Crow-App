@@ -69,7 +69,7 @@ pub async fn open_edit_window<'a>(app: AppHandle, conn: State<'a, Conn>, id: i32
   let edit_window = tauri::WindowBuilder::new(
     &app,
     "Edit",
-    tauri::WindowUrl::App("/notes/editor?id=1".into())
+    tauri::WindowUrl::App(format!("/notes/editor?id={id}").into())
   ).build().expect(format!("[0103] Failed to build window for note with ID: {id}").as_str());
   Ok(())
 }

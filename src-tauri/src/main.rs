@@ -26,7 +26,7 @@ async fn main() -> Result<(), sqlx::Error> {
   tauri::Builder::default()
       // passes the db connection to asking functions
       .manage::<Conn>(Conn(pool))
-      .invoke_handler(tauri::generate_handler![query_all_notes, update_notes, open_edit_window])
+      .invoke_handler(tauri::generate_handler![query_all_notes, update_notes, open_edit_window, query_one_note])
       .run(tauri::generate_context!())
       .expect("error while running tauri application");
 
