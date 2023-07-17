@@ -8,8 +8,8 @@
     margin-top: 16px;
     padding-bottom: 12px; 
     padding-top: 12px; 
-    padding-left: 18px; 
-    padding-right: 18px;
+    padding-left: 42px; 
+    padding-right: 42px;
     @apply lg:ml-10;
   }
 }

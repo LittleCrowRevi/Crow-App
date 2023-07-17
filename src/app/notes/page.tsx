@@ -4,22 +4,13 @@ import { useEffect, useState } from 'react'
 import { invoke } from '@tauri-apps/api/tauri'
 import styles from './notelist.module.css'
 import className from 'classnames'
-
-type Note = {
-  id: Number,
-  date: Date,
-  title: String,
-  text: String,
-  color: String
-}
+import { Note } from '../lib/lib'
 
 // var to stop constant fetching from db
 let firstLoad = true;
 
 export default function Notes() {
-  // var to init the noteState......
-  var n: Note[] = [];
-  const [notesState, setNotes] = useState(n);
+  const [notesState, setNotes] = useState<Note[] | null>(null);
 
   // TODO: loading animation
   const [loading, setLoading] = useState(false);
@@ -39,7 +30,7 @@ export default function Notes() {
       invoke('query_all_notes')
         .then(function(data) {
           let notes: Note[] = [];
-          (data as [Note])?.map((n: Note, index) => { notes.push(n) });
+          (data as [Note]).map((n: Note, index) => { notes.push(n) });
           notes.sort(sortNotes);
           console.log(notes);
           setNotes(notes);

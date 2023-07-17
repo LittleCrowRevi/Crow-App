@@ -66,7 +66,7 @@ pub async fn query_one_note<'a>(conn: State<'a, Conn>, id: String) -> Result<Vec
 #[tauri::command]
 pub async fn open_edit_window<'a>(app: AppHandle, conn: State<'a, Conn>, id: i32) -> Result<(), ()> {
   println!("here!");
-  let edit_window = tauri::WindowBuilder::new(
+  let _edit_window = tauri::WindowBuilder::new(
     &app,
     "Edit",
     tauri::WindowUrl::App(format!("/notes/editor?id={id}").into())
