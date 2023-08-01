@@ -83,7 +83,6 @@ export default function Notes() {
   function OpenEditWindow(id: Number) {
     console.log("Opening note with ID " + id);
     invoke('open_edit_window', { id });
-    //TODO: sizing
   }
 
   return (
